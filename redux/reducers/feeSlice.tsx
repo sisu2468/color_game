@@ -16,6 +16,8 @@ const feeSlice = createSlice({
   initialState,
   reducers: {
     setFee: (state, action) => {
+      console.log("fee", action.payload);
+
       state.playFee = action.payload.playFee;
       state.maxFee = action.payload.maxFee;
       state.nurseFee = action.payload.nurseFee;

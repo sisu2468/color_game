@@ -1,60 +1,158 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { setcolor } from '../redux/reducers/colorstate';
 import { setFee } from '../redux/reducers/feeSlice';
 import { setPage } from '../redux/reducers/pageSlice';
 import { RootState } from '../redux/store';
 
 import Table from '../components/Table';
 import { updateData } from '../redux/reducers/matrixSlice';
-
+import Sheet from '../components/Sheet';
+import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 const getRandomColor = () => {
   const colors = ['green', 'blue']; // Blue and Green colors
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
 };
 
-const InputPage = () => {
+const InputPage = (props: any) => {
+  
   const { playFee, maxFee, nurseFee } = useSelector((state: RootState) => state.fee);
 
   const matrix = useSelector((state: RootState) => state.matrix.data);
-
+  const { grcnt, grconcnt, grtconcnt, bltconcnt, blcnt, blconcnt} = useSelector((state: RootState) => state.color)
   const dispatch = useDispatch();
   let play: number = playFee;
   let max: number = maxFee;
   let nurse: number = nurseFee;
-
+  
   const handleSetPage0 = () => {
     dispatch(setPage("firstPage"));
   };
   const handleSetPage3 = () => {
     dispatch(setPage("resultPage"));
   };
-
   const [randomColor, setRandomColor] = useState<string>('');
-
   const handleButtonClick = (isGreen: boolean) => {
-
-    const newRandomColor = getRandomColor();
-    setRandomColor(newRandomColor);
-
-    const color = isGreen ? 'green' : 'blue';
-
-    let isMatch = undefined;
-
-    if (color === newRandomColor) {
-      isMatch = true;
-    } else {
-      isMatch = false;
+    let newRow;
+    let gr=grcnt, bl=blcnt, grt=grtconcnt, blt=bltconcnt, grc=grconcnt, blc=blconcnt;
+    console.log("matrix" , matrix);
+    if(isGreen){
+      newRow = 'green';
+      if(matrix[matrix.length-1] === 'green'){
+        if(matrix.length>1){
+          if(matrix[matrix.length-2] === 'green'){
+            grt=grtconcnt+1;
+          }
+          else{
+            grc=grconcnt+1;
+          }
+        }
+        else{
+          grc=grconcnt+1;
+        }
+      }
+      else if(matrix[matrix.length-1] === 'blue'){
+        if(matrix.length-2 >= 0){
+          if(matrix[matrix.length-2] === 'green')
+            bl=blcnt+1;
+        }
+        else bl=blcnt+1; 
+      }
+      
     }
-
-    const newRow = [color, isMatch];
-
+    else {
+      newRow = "blue";
+      if(matrix[matrix.length-1] === 'blue'){
+        if(matrix.length>1){
+          if(matrix[matrix.length-2] === 'blue'){
+            blt=bltconcnt+1;
+          }
+          else{
+            blc=blconcnt+1;
+          }
+        }
+        else{
+          blc=blconcnt+1;
+        }
+      }
+      else if(matrix[matrix.length-1] === 'green') {
+        if(matrix.length-2 >= 0){
+          if(matrix[matrix.length-2] === 'blue'){
+            gr=grcnt+1;
+          }
+        }
+        else gr=grcnt+1;
+      }
+      
+    }
+    dispatch(setcolor({grcnt: gr, grconcnt: grc, blcnt: bl, blconcnt: blc, grtconcnt: grt, bltconcnt: blt}))
     const newMatrix = [...matrix, newRow];
-
     dispatch(updateData(newMatrix));
   };
-
+  const curColorset = () => {
+    const newRandomColor = getRandomColor();
+    let gr=grcnt, bl=blcnt, grt=grtconcnt, blt=bltconcnt, grc=grconcnt, blc=blconcnt;
+    if(matrix.length<4){
+      setRandomColor('');
+    }
+    else{
+      if(matrix[matrix.length-1] == 'green'){
+        if(matrix[matrix.length-2] == 'green'){
+          if(gr > grt){
+            setRandomColor('green');
+          }
+          else if(gr == grt){
+            setRandomColor('');
+          }
+          else {
+            setRandomColor('blue');
+          }
+        }
+        else {
+          if(gr > grc){
+            setRandomColor('green')
+          }
+          else if(gr == grc){
+            setRandomColor('')
+          } 
+          else{
+            setRandomColor('blue')
+          }
+        }
+      }
+      else {
+        if(matrix[matrix.length-2] == 'blue'){
+          if(bl > blt){
+            setRandomColor('blue');
+          }
+          else if(bl == blt){
+            setRandomColor('');
+          }
+          else {
+            setRandomColor('green');
+          }
+        }
+        else {
+          if(bl > blc){
+            setRandomColor('blue')
+          }
+          else if(bl == blc){
+            setRandomColor('')
+          } 
+          else{
+            setRandomColor('green')
+          }
+        }
+      }
+    }
+    console.log('',matrix);
+    
+  }
+  useEffect (()=>{
+    curColorset();
+  }, [matrix])
   return (
     <View>
       <View style={styles.btContainer}>
@@ -63,7 +161,9 @@ const InputPage = () => {
           <Text style={styles.backStyle}>終了</Text>
         </TouchableOpacity>
       </View>
-      <Table data={matrix} />
+      <View style={styles.sheet}>
+        <Sheet data={matrix} />
+      </View>
       <View style={styles.panContainer}>
         <TouchableOpacity onPress={handleSetPage3}>
           <View style={styles.tViewStyle}>
@@ -77,14 +177,14 @@ const InputPage = () => {
         </View>
         <View style={styles.tViewStyle}>
           {randomColor ? (
-            <Text style={[styles.nextCol, { backgroundColor: randomColor }]}>
+              <Text style={[styles.nextCol, { backgroundColor: randomColor }]}>
 
-            </Text>
-          ) : (
-            <Text style={styles.nextCol}>
-              ?
-            </Text>
-          )}
+              </Text>
+            ) : (
+              <Text style={styles.nextCol}>
+                ?
+              </Text>
+            )}
         </View>
         <View style={styles.colPan}>
           <TouchableOpacity onPress={() => handleButtonClick(true)}>
@@ -207,6 +307,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
   },
+  sheet: {
+    padding: 25
+  }
 });
 
 export default InputPage;

@@ -5,6 +5,7 @@ import { setFee } from '../redux/reducers/feeSlice';
 import { setPage } from '../redux/reducers/pageSlice';
 import { RootState } from '../redux/store';
 import Sheet from '../components/Sheet';
+import Table from '../components/Table';
 
 const ResultPage = () => {
   const { playFee, maxFee, nurseFee } = useSelector((state: RootState) => state.fee);
@@ -27,9 +28,11 @@ const ResultPage = () => {
       <View style={styles.tViewStyle}>
         <Text style={styles.ruleStyle} >法則シート</Text>
       </View>
-      <Sheet data={matrix} />
-      <View style={styles.h_100}></View>
-      <Sheet data={matrix} />
+      <Table data={matrix} />
+        <View style={styles.h_100}></View>
+      <View>
+        <Sheet data={matrix} />
+      </View>
       <TouchableOpacity onPress={handleSetPage2}>
         <View style={styles.tViewStyle}>
           <Text style={styles.playStyle}>プレイ画面</Text>
@@ -97,7 +100,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   h_100: {
-    height: 100
+    height: 100,
+  },
+  sheet:{
+    padding: 25
   }
 });
 

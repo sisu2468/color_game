@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
-import { convertArray } from "./Table"
-
+import { convertArray } from "./Table";
+import { useDispatch } from "react-redux";
 const Sheet = (props: any) => {
+
+	const dispatch = useDispatch();
 
 	const winColor = convertArray(props.data);
 
@@ -13,43 +15,54 @@ const Sheet = (props: any) => {
 	let greenOneWinCnt1 = 0;
 	let greenOneWinCnt2 = 0;
 	let greenOneOverWinCnt = 0;
+	let greenOverCnt = 0;
 	let greenContinueArray = [];
 
 	let blueArray = [];
 	let blueOneWinCnt1 = 0;
 	let blueOneWinCnt2 = 0;
 	let blueOneOverWinCnt = 0;
+	let blueOverCnt = 0;
 	let blueContinueArray = [];
-
+	
+	let TwoOverCnt = 1;
+	
 	for (let i = 1; i < winColorLen; i++) {
+		if(TwoOverCnt >5){
+			break ;
+		}
 		if (winColor[i] === winColor[i - 1]) {
+			TwoOverCnt++;
 			if (winColor[i] === "green") {
 				greenOneOverWinCnt++;
+				TwoOverCnt > 2 ? greenArray.push([++greenOneWinCnt1, "nocircle"]): greenOverCnt++;				
 				if(i == winColorLen - 1){
-					greenArray.push([++greenOneWinCnt1, "nocircle"]);
-					greenContinueArray.push(greenOneWinCnt1);
+					greenContinueArray.push(greenOverCnt);
 				}
 			} else {
 				blueOneOverWinCnt++;
+				TwoOverCnt > 2 ? blueArray.push([++blueOneWinCnt1, "nocircle"]) : blueOverCnt++;
 				if(i == winColorLen - 1){
-					blueArray.push([++blueOneWinCnt1, "nocircle"]);
-					blueContinueArray.push(blueOneWinCnt1);
+					blueContinueArray.push(blueOverCnt);
 				}
 			}
 		} else {
+			TwoOverCnt = 1;			
 			if (winColor[i] === "blue") {
 				if (greenOneOverWinCnt >= 1) {
-					greenArray.push([++greenOneWinCnt1, "nocircle"]);
-					greenContinueArray.push(greenOneWinCnt1);
+					// greenArray.push([++greenOneWinCnt1, "nocircle"]);
+					greenContinueArray.push(greenOverCnt);
 					greenOneOverWinCnt = 0;
+					// console.log(greenOverCnt);
 				}
 				else {
 					greenArray.push([++greenOneWinCnt2, "circle"]);
+					
 				}
 			} else {
 				if (blueOneOverWinCnt >= 1) {
-					blueArray.push([++blueOneWinCnt1, "nocircle"]);
-					blueContinueArray.push(blueOneWinCnt1);
+					// blueArray.push([++blueOneWinCnt1, "nocircle"]);
+					blueContinueArray.push(blueOverCnt);
 					blueOneOverWinCnt = 0;
 				}
 				else {
@@ -58,13 +71,18 @@ const Sheet = (props: any) => {
 			}
 		}
 	}
+	
 	const screenWidth = Dimensions.get('window').width;
 
 	const styles = StyleSheet.create({
+		colortable: {
+			borderWidth: 1,
+			borderBottomWidth: 0,
+			borderColor: "black",
+		},
 		rows: {
 			width: "100%",
-			borderWidth: 1,
-			borderColor: "black",
+			borderBottomWidth: 1,
 			flexDirection: "row",
 			alignItems: "center"
 		},
@@ -86,19 +104,22 @@ const Sheet = (props: any) => {
 			backgroundColor: "green"
 		},
 		bgBlue: {
-			backgroundColor: "blue"
+			backgroundColor: "blue",
+			borderBottomWidth: 1
 		},
 		right: {
-			width: (screenWidth - 50) / 12 * 11,
+			width: (screenWidth - 50) / 12,
+			borderBottomWidth: 0
 		},
 		top: {
 			flexDirection: "row"
 		},
 		bottom: {
-			flexDirection: "row"
+			flexDirection: "row",
 		},
 		cell: {
 			borderWidth: 1,
+			borderRightWidth: 0,
 			borderColor: "black",
 			width: (screenWidth - 50) / 12,
 			height: (screenWidth - 50) / 12,
@@ -107,6 +128,9 @@ const Sheet = (props: any) => {
 		},
 		bTop_0: {
 			borderTopWidth: 0
+		},
+		bTop_1: {
+			borderTopWidth: 1
 		},
 		bBottom_0: {
 			borderBottomWidth: 0
@@ -123,9 +147,9 @@ const Sheet = (props: any) => {
 	});
 
 	return (
-		<View>
+		<View style={styles.colortable}>
 			<View style={styles.rows}>
-				<View style={styles.left}>
+				<View style={[styles.left]}>
 					<View style={[styles.circle, styles.bgGreen]} />
 				</View>
 				<View style={styles.right}>
@@ -147,7 +171,7 @@ const Sheet = (props: any) => {
 							</View>
 						))}
 					</View>
-					<View style={styles.bottom}>
+					<View style={[styles.bottom]}>
 						{greenContinueArray.map((item, itemIdex) => (
 							<View style={[styles.cell, styles.bTop_0, styles.bBottom_0]} key={itemIdex}>
 								<Text style={[styles.circle, styles.textCenter]}>{item}</Text>
@@ -162,7 +186,7 @@ const Sheet = (props: any) => {
 				</View>
 			</View>
 			<View style={styles.rows}>
-				<View style={styles.left}>
+				<View style={[styles.left, styles.bTop_0]}>
 					<View style={[styles.circle, styles.bgBlue]} />
 				</View>
 				<View style={styles.right}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Dimensions, Alert } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Alert, ScrollView } from "react-native";
 
 const showAlert = () => {
 	Alert.alert(
@@ -17,7 +17,7 @@ const showAlert = () => {
 export const convertArray = (inputArray: any) => {
 	let newArray = new Array;
 	inputArray.map((row: any) => {
-		if ((row[0] === "green" && row[1] == true) || (row[0] === "blue" && row[1] == false) == true) {
+		if (row === "green") {
 			newArray.push("green");
 		} else {
 			newArray.push("blue");
@@ -51,7 +51,7 @@ const convertMatrix = (inputArray: any, rows: number, cols: number) => {
 			x++;
 		}
 		else {
-			if (y === 11) {
+			if (y === 24) {
 				showAlert();
 				break;
 			}
@@ -66,26 +66,31 @@ const convertMatrix = (inputArray: any, rows: number, cols: number) => {
 const Table = (props: any) => {
 	const clickedHistory = props.data;
 
-	const matrix = convertMatrix(convertArray(clickedHistory), 12, 5);
+	const matrix = convertMatrix(convertArray(clickedHistory), 25, 5);
 
 	const screenWidth = Dimensions.get('window').width;
 
 	const styles = StyleSheet.create({
 		container: {
-			width: "80%",
+			width: "100%",
 			flexDirection: 'column',
 			alignItems: 'center',
 			justifyContent: 'center',
-			padding: 5,
-			marginHorizontal: "10%"
+			// padding: 5,
+			overflow: "scroll",
+			borderTopWidth: 1,
+			borderLeftWidth: 1
 		},
 		row: {
-			flexDirection: 'row',
+			flexDirection: 'row'
 		},
 		cell: {
 			width: screenWidth / 13,
 			height: screenWidth / 13,
-			borderWidth: 1,
+			// borderWidth: 1,
+			borderBottomWidth: 1,
+			borderRightWidth: 1,
+			// borderBottomWidth: 0,
 			borderColor: 'black',
 			justifyContent: 'center',
 			alignItems: 'center',
@@ -102,25 +107,27 @@ const Table = (props: any) => {
 	});
 
 	return (
-		<View style={styles.container}>
-			{matrix.map((row, rowIndex) => (
-				<View key={rowIndex} style={styles.row}>
-					{row.map((cell, colIndex) => (
-						<View key={colIndex} style={styles.cell}>
-							{cell !== "" ? (
-								(cell === "green") ? (
-									<View style={[styles.circle, styles.bgGreen]} />
+		<ScrollView horizontal={true}>
+			<View style={styles.container}>
+				{matrix.map((row, rowIndex) => (
+					<View key={rowIndex} style={styles.row}>
+						{row.map((cell, colIndex) => (
+							<View key={colIndex} style={styles.cell}>
+								{cell !== "" ? (
+									(cell === "green") ? (
+										<View style={[styles.circle, styles.bgGreen]} />
+									) : (
+										<View style={[styles.circle, styles.bgBlue]} />
+									)
 								) : (
-									<View style={[styles.circle, styles.bgBlue]} />
-								)
-							) : (
-								<View style={styles.circle} />
-							)}
-						</View>
-					))}
-				</View>
-			))}
-		</View>
+									<View style={styles.circle} />
+								)}
+							</View>
+						))}
+					</View>
+				))}
+			</View>
+		</ScrollView>
 	);
 };
 
