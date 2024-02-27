@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFee } from '../redux/reducers/feeSlice';
 import { setPage } from '../redux/reducers/pageSlice';
@@ -89,11 +89,12 @@ const FeePage = () => {
     </View>
   );
 };
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   panContainer: {
     width: '100%',
-    height: 500,
+    height: screenHeight *10 / 12,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
   },
   btContainer: {
     width: '100%',
-    height: 'auto',
     display: 'flex',
     justifyContent: 'center',
     padding: 10,
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     width: 60,
-    height: 40,
+    height: screenHeight / 12,
     backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#999',
     color: 'black',
-    paddingTop: 5,
+    paddingTop: 10,
     marginRight: 5,
     alignSelf: 'flex-end',
   },

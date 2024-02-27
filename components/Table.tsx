@@ -69,6 +69,9 @@ const Table = (props: any) => {
 	const matrix = convertMatrix(convertArray(clickedHistory), 25, 5);
 
 	const screenWidth = Dimensions.get('window').width;
+	const screenHeight = Dimensions.get('window').height;
+	const circle_size = screenHeight > screenWidth ? screenWidth / 16 : screenHeight / 50;
+	
 
 	const styles = StyleSheet.create({
 		container: {
@@ -82,11 +85,12 @@ const Table = (props: any) => {
 			borderLeftWidth: 1
 		},
 		row: {
-			flexDirection: 'row'
+			flexDirection: 'row',
+			// width: screenWidth / 20
 		},
 		cell: {
 			width: screenWidth / 13,
-			height: screenWidth / 13,
+			height: screenHeight / 20,
 			// borderWidth: 1,
 			borderBottomWidth: 1,
 			borderRightWidth: 1,
@@ -94,15 +98,22 @@ const Table = (props: any) => {
 			borderColor: 'black',
 			justifyContent: 'center',
 			alignItems: 'center',
+			padding: 10,
+			flex: 1,
+			overflow: 'hidden',
+			backgroundColor: 'transparent',
+
 		},
 		circle: {
-			padding: "30%"
+			padding: "30%",
+			width: circle_size,
+			height: circle_size,
 		},
 		bgGreen: {
-			backgroundColor: "green"
+			backgroundColor: "green",
 		},
 		bgBlue: {
-			backgroundColor: "blue"
+			backgroundColor: "blue",
 		}
 	});
 

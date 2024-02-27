@@ -15,6 +15,7 @@ import {
     View,
     Button,
     TouchableOpacity,
+    Dimensions
 } from 'react-native';
 
 import {
@@ -51,7 +52,7 @@ function FirstPage() {
         switch (renpage) {
             case "firstPage":
                 return (
-                    <View style={backgroundStyle}>
+                    <View style={[backgroundStyle]}>
                         <TouchableOpacity onPress={() => handleSetPage('settingPage')}>
                             <View style={styles.firstContainer}>
                                 <Text style={styles.textStyle}>設定</Text>
@@ -97,6 +98,7 @@ function FirstPage() {
         </View>
     );
 }
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     topContainer: {
@@ -105,9 +107,9 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     firstContainer: {
-        marginTop: 70,
+        marginTop: screenHeight / 11,
         width: '80%',
-        height: 50,
+        height: screenHeight / 11,
         marginLeft: 'auto',
         marginRight: 'auto',
         backgroundColor: '#9f73bc',
@@ -117,9 +119,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     secondContainer: {
-        marginTop: 100,
+        marginTop: screenHeight * 2 / 11,
         width: '80%',
-        height: 50,
+        height: screenHeight / 11,
         marginLeft: 'auto',
         marginRight: 'auto',
         backgroundColor: '#bc7a73',
@@ -128,9 +130,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     thirdContainer: {
-        marginTop: 100,
+        marginTop: screenHeight * 2 / 11,
         width: '80%',
-        height: 50,
+        height: screenHeight / 11,
         marginLeft: 'auto',
         marginRight: 'auto',
         backgroundColor: '#73b2bc',
@@ -142,7 +144,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 25,
         width: '100%',
-        height: 40,
         color: 'black',
     }
 });

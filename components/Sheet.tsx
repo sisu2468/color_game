@@ -73,6 +73,8 @@ const Sheet = (props: any) => {
 	}
 	
 	const screenWidth = Dimensions.get('window').width;
+	const screenHeight = Dimensions.get('window').height;
+	const color_size = screenHeight > screenWidth ? screenWidth : screenHeight;
 
 	const styles = StyleSheet.create({
 		colortable: {
@@ -87,18 +89,20 @@ const Sheet = (props: any) => {
 			alignItems: "center"
 		},
 		left: {
-			width: (screenWidth - 50) / 12,
-			padding: 5,
+			width: (screenWidth - 30) / 12,
+			// padding: 5,
 			alignItems: "center",
 			justifyContent: "center"
 		},
 		circle: {
-			width: 18,
-			height: 18,
+			width: color_size  / 22,
+			height: color_size / 22,
 			borderRadius: 50,
 			borderWidth: 1,
+			textAlign: "center",
 			alignItems: "center",
-			justifyContent: "center"
+			justifyContent: "center",
+			paddingTop: color_size/ 22 / 5
 		},
 		bgGreen: {
 			backgroundColor: "green"
@@ -108,7 +112,7 @@ const Sheet = (props: any) => {
 			borderBottomWidth: 1
 		},
 		right: {
-			width: (screenWidth - 50) / 12,
+			width: (screenWidth - 30) / 12,
 			borderBottomWidth: 0
 		},
 		top: {
@@ -121,8 +125,8 @@ const Sheet = (props: any) => {
 			borderWidth: 1,
 			borderRightWidth: 0,
 			borderColor: "black",
-			width: (screenWidth - 50) / 12,
-			height: (screenWidth - 50) / 12,
+			width: (screenWidth-30) / 12,
+			height: screenHeight / 20,
 			alignItems: "center",
 			justifyContent: "center"
 		},
